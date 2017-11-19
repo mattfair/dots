@@ -11,83 +11,85 @@
 " KEY MAPS
 " {{{
 " ----------------------------------------------------------------------------
-
-" Useful macros I use the most
-nmap \A :set formatoptions+=a<CR>:echo "autowrap enabled"<CR>
-nmap \M :set noexpandtab tabstop=8 softtabstop=4 shiftwidth=4<CR>
-nmap \T :set expandtab tabstop=8 shiftwidth=8 softtabstop=4<CR>
-nmap \a :set formatoptions-=a<CR>:echo "autowrap disabled"<CR>
-nmap \b :set nocin tw=80<CR>:set formatoptions+=a<CR>
-nmap \c :call TmuxPaneClear()<CR>
-nmap \e :NERDTreeToggle<CR>
-nmap \g :Gstatus<CR>
-nmap \i vip:sort<CR>
-nmap \l :setlocal number!<CR>:setlocal number?<CR>
-nmap \m :set expandtab tabstop=2 shiftwidth=2 softtabstop=2<CR>
-nmap \o :set paste!<CR>:set paste?<CR>
-nmap \p :ProseMode<CR>
-nmap \q :nohlsearch<CR>
-nmap \r :call TmuxPaneRepeat()<CR>
-nmap \s :setlocal invspell<CR>
-nmap \t :set expandtab tabstop=4 shiftwidth=4 softtabstop=4<CR>
-nmap \u :setlocal list!<CR>:setlocal list?<CR>
-nmap \w :setlocal wrap!<CR>:setlocal wrap?<CR>
-nmap \x :cclose<CR>
-nmap \z :w<CR>:!open %<CR><CR>
-
 " For any plugins that use this, make their keymappings use comma
 let mapleader = ","
-let maplocalleader = ","
+let maplocalleader = "\\"
+
+" Useful macros I use the most
+nnoremap <localleader>A :set formatoptions+=a<CR>:echo "autowrap enabled"<CR>
+nnoremap <localleader>M :set noexpandtab tabstop=8 softtabstop=4 shiftwidth=4<CR>
+nnoremap <localleader>T :set expandtab tabstop=8 shiftwidth=8 softtabstop=4<CR>
+nnoremap <localleader>a :set formatoptions-=a<CR>:echo "autowrap disabled"<CR>
+nnoremap <localleader>b :set nocin tw=80<CR>:set formatoptions+=a<CR>
+nnoremap <localleader>c :call TmuxPaneClear()<CR>
+nnoremap <localleader>e :NERDTreeToggle<CR>
+nnoremap <localleader>g :Gstatus<CR>
+nnoremap <localleader>i vip:sort<CR>
+nnoremap <localleader>l :setlocal number!<CR>:setlocal number?<CR>
+nnoremap <localleader>m :set expandtab tabstop=2 shiftwidth=2 softtabstop=2<CR>
+nnoremap <localleader>o :set paste!<CR>:set paste?<CR>
+nnoremap <localleader>p :ProseMode<CR>
+nnoremap <localleader>q :nohlsearch<CR>
+nnoremap <localleader>r :call TmuxPaneRepeat()<CR>
+nnoremap <localleader>s :setlocal invspell<CR>
+nnoremap <localleader>t :set expandtab tabstop=4 shiftwidth=4 softtabstop=4<CR>
+nnoremap <localleader>u :setlocal list!<CR>:setlocal list?<CR>
+nnoremap <localleader>w :setlocal wrap!<CR>:setlocal wrap?<CR>
+nnoremap <localleader>x :cclose<CR>
+nnoremap <localleader>z :w<CR>:!open %<CR><CR>
 
 " Fast editing and reloading of vimrc configs
-map <leader>e :e! ~/.vimrc<cr>
-autocmd! bufwritepost vimrc source ~/.vimrc
+nnoremap <leader>e :e! $MYVIMRC<cr>
+if has ('autocmd')
+  augroup vimrc_reload     " Source vim configuration upon save
+    autocmd! BufWritePost $MYVIMRC source % | echom "Reloaded " . $MYVIMRC | redraw
+  augroup END
+endif
 
 " Turn off linewise keys. Normally, the `j' and `k' keys move the cursor down one entire line. with
 " line wrapping on, this can cause the cursor to actually skip a few lines on the screen because
 " it's moving from line N to line N+1 in the file. I want this to act more visually -- I want `down'
 " to mean the next line on the screen
-nmap j gj
-nmap k gk
+nnoremap j gj
+nnoremap k gk
 
 " Move between open buffers.
-nmap <C-n> :bnext<CR>
-nmap <C-p> :bprev<CR>
+nnoremap <C-n> :bnext<CR>
+nnoremap <C-p> :bprev<CR>
 
 " Use the space key to toggle folds
 nnoremap <space> za
 vnoremap <space> zf
 
 " Super fast window movement shortcuts
-nmap <C-j> <C-W>j
-nmap <C-k> <C-W>k
-nmap <C-h> <C-W>h
-nmap <C-l> <C-W>l
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-h> <C-W>h
+nnoremap <C-l> <C-W>l
 
 " Search for the word under the cursor in the current directory
-"nmap <leader>g   mo:Ack! "\b<cword>\b" <CR>
-"nmap <leader>g   mo:Ggrep! "\b<cword>\b" <CR>
+"nnoremap <leader>g   mo:Ack! "\b<cword>\b" <CR>
+"nnoremap <leader>g   mo:Ggrep! "\b<cword>\b" <CR>
 
 " Alt-W to delete a buffer and remove it from the list but keep the window via bufkill.vim
-nmap <Esc>w :BD<CR>
-nmap ∑      :BD<CR>
+nnoremap <Esc>w :BD<CR>
 
 " Quickly fix spelling errors choosing the first result
-nmap <Leader>z z=1<CR><CR>
+nnoremap <Leader>z z=1<CR><CR>
 
 " Fix annoyances in the QuickFix window, like scrolling too much
-autocmd FileType qf setlocal number nolist scrolloff=0
-autocmd Filetype qf wincmd J " Makes sure it's at the bottom of the vim window
+"autocmd FileType qf setlocal number nolist scrolloff=0
+"autocmd Filetype qf wincmd J " Makes sure it's at the bottom of the vim window
 
 " Commands to send common keystrokes using tmux
 let g:tmux_console_pane = '0:0.0'
 let g:tmux_server_pane = '0:0.0'
-function TmuxPaneRepeat()
+function! TmuxPaneRepeat()
   write
   silent execute ':!tmux send-keys -t' g:tmux_console_pane 'C-p' 'C-j'
   redraw!
 endfunction
-function TmuxPaneClear()
+function! TmuxPaneClear()
   silent execute ':!tmux send-keys -t' g:tmux_server_pane 'C-j' 'C-j' 'C-j' 'C-j' 'C-j' 'C-j' 'C-j'
   redraw!
 endfunction
@@ -195,8 +197,8 @@ set wildignore=*.class,*.o,*~,*.pyc,.git,node_modules  " Ignore certain files in
 
 " ----------------------------------------------------------------------------
 " Plugin Manager
-" ----------------------------------------------------------------------------
 " {{{
+" ----------------------------------------------------------------------------
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
