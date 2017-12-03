@@ -6,11 +6,7 @@
 "
 " Matt's .vimrc file
 "
-
-" ----------------------------------------------------------------------------
-" KEY MAPS
-" {{{
-" ----------------------------------------------------------------------------
+" KEY MAPS {{{
 " For any plugins that use this, make their keymappings use comma
 let mapleader = ","
 let maplocalleader = "\\"
@@ -50,8 +46,8 @@ endif
 " line wrapping on, this can cause the cursor to actually skip a few lines on the screen because
 " it's moving from line N to line N+1 in the file. I want this to act more visually -- I want `down'
 " to mean the next line on the screen
-nnoremap j gj
-nnoremap k gk
+"nnoremap j gj
+"nnoremap k gk
 
 " Move between open buffers.
 nnoremap <C-n> :bnext<CR>
@@ -111,12 +107,7 @@ endfunction
 nnoremap <C-w>h :silent call KeepCurrentLine('h')<CR>
 nnoremap <C-w>l :silent call KeepCurrentLine('l')<CR>
 " }}}
-
-" ----------------------------------------------------------------------------
-" ABBREVATIONS
-" {{{
-" ----------------------------------------------------------------------------
-
+" ABBREVATIONS {{{
 " Typing `$c` on the command line expands to `:e` + the current path, so it's easy to edit a file in
 " the same directory as the current file.
 cnoremap $c e <C-\>eCurrentFileDir()<CR>
@@ -124,12 +115,7 @@ function! CurrentFileDir()
    return "e " . expand("%:p:h") . "/"
 endfunction
 " }}}
-
-" ----------------------------------------------------------------------------
-" OPTIONS
-" {{{
-" ----------------------------------------------------------------------------
-
+" OPTIONS {{{
 set autoindent              " Carry over indenting from previous line
 set autoread                " Don't bother me hen a file changes
 set autowrite               " Write on :next/:prev/^Z
@@ -194,11 +180,7 @@ set wildmenu                " Show possible completions on command line
 set wildmode=list:longest,full " List all options and complete
 set wildignore=*.class,*.o,*~,*.pyc,.git,node_modules  " Ignore certain files in tab-completion
 " }}}
-
-" ----------------------------------------------------------------------------
-" Plugin Manager
-" {{{
-" ----------------------------------------------------------------------------
+" Plugin Manager {{{
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
@@ -241,14 +223,8 @@ call vundle#end()
 " Essential for filetype plugins.
 filetype plugin indent on
 " }}}
-
-" ----------------------------------------------------------------------------
-" PLUGIN SETTINGS
-" {{{1
-" ----------------------------------------------------------------------------
-
-" FZF (replaces Ctrl-P, FuzzyFinder and Command-T)
-" {{{2
+" PLUGIN SETTINGS {{{1
+" FZF (replaces Ctrl-P, FuzzyFinder and Command-T) {{{2
 set rtp+=/usr/local/bin/fzf
 set rtp+=~/.fzf
 nmap ; :Buffers<CR>
@@ -256,53 +232,37 @@ nmap <Leader>r :Tags<CR>
 nmap <Leader>t :Files<CR>
 nmap <Leader>a :Ag<CR>
 " }}}
-
-" Tell ack.vim to use ag (the Silver Searcher) instead
-" {{{2
+" Tell ack.vim to use ag (the Silver Searcher) instead {{{2
 let g:ackprg = 'ag --vimgrep'
 " }}}
-
-" GitGutter styling to use · instead of +/-
-" {{{2
+" GitGutter styling to use · instead of +/- {{{2
 let g:gitgutter_sign_added = '∙'
 let g:gitgutter_sign_modified = '∙'
 let g:gitgutter_sign_removed = '∙'
 let g:gitgutter_sign_modified_removed = '∙'
 " }}}
-
-" SuperTab
-" {{{2
+" SuperTab {{{2
 let g:SuperTabLongestEnhanced=1
 let g:SuperTabLongestHighlight=1
 " }}}
-
-" Use incsearch.vim to highlight as I search
-" {{{2
+" Use incsearch.vim to highlight as I search {{{2
 map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 " }}}
-
-" Highlight YAML frontmatter in Markdown files
-" {{{2
+" Highlight YAML frontmatter in Markdown files {{{2
 let g:vim_markdown_frontmatter = 1
 " }}}
-
-" ALE
-" {{{2
+" ALE {{{2
 let g:ale_sign_warning = '▲'
 let g:ale_sign_error = '✗'
 highlight link ALEWarningSign String
 highlight link ALEErrorSign Title
 " }}}
-
-" Youcompleteme
-" {{{2
+" Youcompleteme {{{2
 let g:ycm_global_ycm_extra_conf = '.ycm_extra_conf.py'
 " }}}
-
-" Lightline
-" {{{2
+" Lightline {{{2
 let g:lightline = {
 \ 'colorscheme': 'wombat',
 \ 'active': {
@@ -347,11 +307,7 @@ function! s:MaybeUpdateLightline()
   end
 endfunction
 " }}}
-
-" ----------------------------------------------------------------------------
-" COLORS
-" {{{
-" ----------------------------------------------------------------------------
+" COLORS {{{
 
 " Make sure colored syntax mode is on, and make it Just Work with 256-color terminals.
 set background=dark
@@ -438,9 +394,7 @@ highlight link markdownCode Delimiter
 highlight link markdownCodeBlock Delimiter
 highlight link markdownListMarker Todo
 " }}}
-
-" Custom mode for distraction-free editing
-" {{{
+" Custom mode for distraction-free editing {{{
 function! ProseMode()
   call goyo#execute(0, [])
   set spell noci nosi noai nolist noshowmode noshowcmd
@@ -453,11 +407,7 @@ function! ProseMode()
 endfunction
 command! ProseMode call ProseMode()
 " }}}
-
-" ----------------------------------------------------------------------------
-" FILE TYPE TRIGGERS
-" {{{
-" ----------------------------------------------------------------------------
+" FILE TYPE TRIGGERS {{{
 
 " Reset all autocommands
 augroup vimrc
@@ -502,11 +452,7 @@ au Filetype gitcommit setlocal tw=80
 
 augroup END
 " }}}
-
-" ----------------------------------------------------------------------------
-" HOST-SPECIFIC VIM FILE
-" {{{
-" ----------------------------------------------------------------------------
+" HOST-SPECIFIC VIM FILE {{{
 
 " Now load specifics to this host
 if filereadable(expand("~/.vimlocal"))
