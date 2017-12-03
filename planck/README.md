@@ -12,10 +12,16 @@ by holding or tapping function keys.
 [qmk]: https://github.com/qmk/qmk_firmware
 
 ## Building
+Checkout the [QMK Firmware][qmk] code and create a symbolic link to this directoryC in the `qmk_firmware/keyboards/planck/keymaps` directory.
 
-Run the following from this keymap directory:
+```
+    ln -s `pwd`/planck ~/Projects/qmk_firmware/keyboards/planck/keymaps/mattfair
+```
 
-    make clean; make dfu
+To compile from the QMK Firmware directory run:
+```
+    make planck/rev4:mattfair
+```
 
 ----------
 
