@@ -3,7 +3,7 @@
 
 #include "../../config.h"
 
-//#define PREVENT_STUCK_MODIFIERS
+#define PREVENT_STUCK_MODIFIERS
 
 //mouse configuration
 #define MOUSEKEY_INTERVAL 16
