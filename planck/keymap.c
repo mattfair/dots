@@ -1,3 +1,4 @@
+#include "config.h"
 #include "planck.h"
 #include "action_layer.h"
 #include "keymap_plover.h"
@@ -35,6 +36,9 @@ enum planck_layers {
 #define WM_W    LALT(LGUI(KC_LEFT))
 #define WM_CNTR LALT(LGUI(KC_C))
 
+#define CTRL_T LCTL(KC_T)
+#define CTRL_N LCTL(KC_N)
+
 // Custom key codes
 enum planck_keycodes {
   QWERTY = SAFE_RANGE,
@@ -44,7 +48,7 @@ enum planck_keycodes {
   PV_EXIT,
   PV_LOOK,
   SEND_VERSION,
-  MOUSE_EXIT 
+  MOUSE_EXIT
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -56,15 +60,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
    *       │  ⇧  │  Z  │  X  │  C  │  V  │  B  │  N  │  M  │  ,  │  .  │  /  │  ⇧  │
    *       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
-   *       │  ⌃  │Hyper│  ⌥  │  ⌘  │  ↓  │ NAV │Space│  ↑  │  ⌘  │  ⌥  │Hyper│ GUI │
+   *       │  ⌃  │Hyper│  ⌥  │  ⌘  │  ↓  │ NAV │Space│  ↑  │  ⌘  │  ⌥  │ LDR │ GUI │
    *       └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
-   *
    */
   [BASE_QWERTY_LAYER] = {
-    {KC_TAB,                 KC_Q,           KC_W,    KC_E,    KC_R,  KC_T,   KC_Y,    KC_U,  KC_I,    KC_O,    KC_P,   KC_QUOT},
-    {KC_ESC,          KC_A,           KC_S,    KC_D,    KC_F,  KC_G,   KC_H,    KC_J,  KC_K,    KC_L,    KC_SCLN, KC_ENT},
-    {KC_LSPO,                KC_Z,           KC_X,    KC_C,    KC_V,  KC_B,   KC_N,    KC_M,  KC_COMM, KC_DOT,  KC_SLSH,KC_RSPC},
-    {KC_LCTRL, ALL_T(KC_LBRC), KC_LALT, KC_LGUI, LOWER, MO(NAV_LAYER), KC_SPC, RAISE, KC_RGUI, KC_RALT, ALL_T(KC_RBRC),  MO(GUI_LAYER)}
+    {KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I,    KC_O,   KC_P,   KC_QUOT},
+    {KC_ESC, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K,    KC_L,   KC_SCLN, KC_ENT},
+    {KC_LSPO,KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH,KC_RSPC},
+    {KC_LCTRL, ALL_T(KC_LCTRL), KC_LALT, KC_LGUI, LOWER, MO(NAV_LAYER), KC_SPC, RAISE, KC_RGUI, KC_RALT, KC_LEAD,  MO(GUI_LAYER)}
   },
 
   /* Numeric and Logic/Math layer (Lower)
@@ -91,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
    *                │     │  @  │  #  │  `  │  ^  │     │     │  $  │     │     │     │     │ -- Punctuation symbols
    *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤  /
-   *                │     │     │  _  │  |  │  ~  │     │     │     │     │     │     │     │ /
+   *                │     │  \  │  _  │  |  │  ~  │     │     │     │     │     │     │     │ /
    *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
    *                │     │     │     │     │     │ Del │     │     │     │     │     │     │
    *                └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
@@ -99,7 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [RAISE_LAYER] = {
     {_______, KC_F11,  KC_F12,  KC_F13,  KC_F14,  KC_F15,  KC_F16,  KC_F17,  KC_F18,  KC_F19,  KC_F20, _______},
     {_______, KC_AT, KC_HASH, KC_GRAVE, KC_CIRCUMFLEX, ___x___, ___x___, KC_DOLLAR, ___x___, ___x___, ___x___, _______},
-    {_______, ___x___, KC_UNDERSCORE, KC_PIPE, KC_TILD, ___x___, ___x___, ___x___, ___x___, ___x___,  ___x___, _______},
+    {_______, KC_BSLASH, KC_UNDERSCORE, KC_PIPE, KC_TILD, ___x___, ___x___, ___x___, ___x___, ___x___,  ___x___, _______},
     {_______, _______, _______, _______, _______, KC_DEL,  ___x___,  _______, _______, _______, _______, _______}
   },
 
@@ -241,7 +244,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       case MOUSE_EXIT:
-        //exit mouse mode on mouse up
+        //exit mouse mode on key up
         if (!record->event.pressed) {
           layer_off(NAV_LAYER);
           layer_off(MOUSE_LAYER);
@@ -280,10 +283,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
   }
   return true;
-}
-
-void matrix_init_user(void) {
-    #ifdef AUDIO_ENABLE
-      PLAY_SONG(startup_sound);
-    #endif
 }
