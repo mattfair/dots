@@ -1,18 +1,7 @@
 #include "planck.h"
 #include "action_layer.h"
-#ifdef AUDIO_ENABLE
-#include "audio.h"
-#endif
-#include "eeconfig.h"
 #include "keymap_plover.h"
 #include "version.h"
-
-//mouse configuration
-#define MOUSEKEY_INTERVAL 16
-#define MOUSEKEY_DELAY 0
-#define MOUSEKEY_TIME_TO_MAX 60
-#define MOUSEKEY_MAX_SPEED 7
-#define MOUSEKEY_WHEEL_DELAY 0
 
 extern keymap_config_t keymap_config;
 
@@ -54,28 +43,28 @@ enum planck_keycodes {
   RAISE,
   PV_EXIT,
   PV_LOOK,
-  SEND_VERSION
+  SEND_VERSION,
+  MOUSE_EXIT 
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /* Base layer (Qwerty)
-   *                ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
-   *                │  ⇥  │  Q  │  W  │  E  │  R  │  T  │  Y  │  U  │  I  │  O  │  P  │  '  │
-   *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
-   * Tap for Esc -- │  ⌃  │  A  │  S  │  D  │  F  │  G  │  H  │  J  │  K  │  L  │  ;  │  ⌃  │ -- Tap for Enter
-   *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
-   *   Tap for ( -- │  ⇧  │  Z  │  X  │  C  │  V  │  B  │  N  │  M  │  ,  │  .  │  /  │  ⇧  │ -- Tap for )
-   *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
-   *   Tap for { -- │ GUI │Hyper│  ⌥  │  ⌘  │  ↓  │ NAV │Space│  ↑  │  ⌘  │  ⌥  │Hyper│ GUI │ -- Tap for }
-   *                └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
-   *   Tap for [ ------------'        Tap for TMUX --'                             '------------ Tap for ]
+   *       ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+   *       │  ⇥  │  Q  │  W  │  E  │  R  │  T  │  Y  │  U  │  I  │  O  │  P  │  '  │
+   *       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+   *       │ ESC │  A  │  S  │  D  │  F  │  G  │  H  │  J  │  K  │  L  │  ;  │Enter│
+   *       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+   *       │  ⇧  │  Z  │  X  │  C  │  V  │  B  │  N  │  M  │  ,  │  .  │  /  │  ⇧  │
+   *       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+   *       │  ⌃  │Hyper│  ⌥  │  ⌘  │  ↓  │ NAV │Space│  ↑  │  ⌘  │  ⌥  │Hyper│ GUI │
+   *       └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
    *
    */
   [BASE_QWERTY_LAYER] = {
     {KC_TAB,                 KC_Q,           KC_W,    KC_E,    KC_R,  KC_T,   KC_Y,    KC_U,  KC_I,    KC_O,    KC_P,   KC_QUOT},
-    {CTL_T(KC_ESC),          KC_A,           KC_S,    KC_D,    KC_F,  KC_G,   KC_H,    KC_J,  KC_K,    KC_L,    KC_SCLN, CTL_T(KC_ENT)},
+    {KC_ESC,          KC_A,           KC_S,    KC_D,    KC_F,  KC_G,   KC_H,    KC_J,  KC_K,    KC_L,    KC_SCLN, KC_ENT},
     {KC_LSPO,                KC_Z,           KC_X,    KC_C,    KC_V,  KC_B,   KC_N,    KC_M,  KC_COMM, KC_DOT,  KC_SLSH,KC_RSPC},
-    {LT(GUI_LAYER, KC_LCBR), ALL_T(KC_LBRC), KC_LALT, KC_LGUI, LOWER, LT(NAV_LAYER, KC_LCTL | KC_A), KC_SPC, RAISE, KC_RGUI, KC_RALT, ALL_T(KC_RBRC),  LT(GUI_LAYER, KC_RCBR)}
+    {KC_LCTRL, ALL_T(KC_LBRC), KC_LALT, KC_LGUI, LOWER, MO(NAV_LAYER), KC_SPC, RAISE, KC_RGUI, KC_RALT, ALL_T(KC_RBRC),  MO(GUI_LAYER)}
   },
 
   /* Numeric and Logic/Math layer (Lower)
@@ -91,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
   [LOWER_LAYER] = {
     {LGUI(KC_GRAVE), KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______},
-    {_______,      ___x___, KC_PERCENT,  KC_AMPERSAND, KC_PIPE, KC_ASTERISK, KC_EXCLAIM, KC_PEQL, KC_MINUS, KC_MINUS,  KC_SLSH, _______},
+    {_______,      ___x___, KC_PERCENT,  KC_AMPERSAND, KC_PIPE, KC_ASTERISK, KC_EXCLAIM, KC_PEQL, KC_PLUS, KC_MINUS,  KC_SLSH, _______},
     {_______,      KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______},
     {_______,      _______, _______, _______, _______, ___x___, KC_BSPC, _______, _______, _______, _______, _______}
   },
@@ -118,20 +107,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *
    *         Large movements -----/```````````````````\   /```````````````````\----- Vim-style arrow keys
    *                ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
-   *                │     │     │     │     │     │     │     │     │     │     │     │     │
+   *                │     │     │     │     │     │     │     │Prev │Next │Refsh│     │     │ -- Browser keys
    *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
    *                │     │     │Home │PgUp │PgDn │ End │  ←  │  ↓  │  ↑  │  →  │     │     │
    *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
-   *                │     │     │     │     │     │     │     │     │     │     │     │     │
+   *                │  (  │  {  │  [  │     │     │     │     │     │     │  ]  │  }  │  )  │ -- Braces/Brackets
    *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
    *                │     │     │     │     │     │     │MOUSE│     │     │     │     │     │
    *                └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
    *                                                       '--- Toggle mouse mode
    */
   [NAV_LAYER] = {
-    {___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,___x___},
+    {___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, KC_WBAK, KC_WFWD, KC_WREF, ___x___,___x___},
     {_______, ___x___, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, ___x___, _______},
-    {_______, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,_______},
+    {KC_LPRN, KC_LCBR, KC_LBRACKET, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___, KC_RBRACKET, KC_RCBR,KC_RPRN},
     {_______, _______, _______, _______, ___x___, ___x___, TG(MOUSE_LAYER), ___x___, _______, _______, _______,_______}
   },
 
@@ -139,7 +128,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *
    *                          Wheel ---/`````````\ Speed /```````````````````\----- Vim-style arrow keys
    *                ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
-   *                │     │     │     │     │     │SPD 0│     │     │     │     │     │     │
+   *                │     │     │     │     │     │SPD 0│     │Prev │Next │Refsh│     │     │ -- Browser keys
    *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
    *                │     │     │     │Wh Up│Wh Dw│SPD 1│  ←  │  ↓  │  ↑  │  →  │ Exit│     │ -- Exit mouse mode
    *                ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
@@ -150,8 +139,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                                               \_Mouse Buttons_/
    */
   [MOUSE_LAYER] = {
-    {___x___, ___x___, ___x___, ___x___, ___x___, KC_ACL0, ___x___, ___x___, ___x___, ___x___, ___x___, ___x___},
-    {_______, ___x___, ___x___, KC_WH_U, KC_WH_D, KC_ACL1,  KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, TG(MOUSE_LAYER),  _______},
+    {___x___, ___x___, ___x___, ___x___, ___x___, KC_ACL0, ___x___, KC_WBAK, KC_WFWD, KC_WREF, ___x___, ___x___},
+    {_______, ___x___, ___x___, KC_WH_U, KC_WH_D, KC_ACL1,  KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, MOUSE_EXIT,  _______},
     {_______, ___x___, ___x___, ___x___, ___x___, KC_ACL2, ___x___, ___x___, ___x___, ___x___, ___x___, _______},
     {_______, _______, _______, _______, ___x___, KC_BTN1, KC_BTN2, KC_BTN3, _______, _______, _______, _______}
   },
@@ -182,8 +171,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
    *                │  #  │  #  │  #  │  #  │  #  │  #  │  #  │  #  │  #  │  #  │  #  │  #  │
    *                ├─────┼─────┼─────┼─────┼─────┼─────┴─────┼─────┼─────┼─────┼─────┼─────┤
-   *                │Look │     │  T  │  P  │  H  │           │  F  │  P  │  L  │  T  │  D  │
-   *                │ -up │  S  ├─────┼─────┼─────┤     *     ├─────┼─────┼─────┼─────┼─────┤
+   *                │     │     │  T  │  P  │  H  │           │  F  │  P  │  L  │  T  │  D  │
+   *                │     │  S  ├─────┼─────┼─────┤     *     ├─────┼─────┼─────┼─────┼─────┤
    *                │     │     │  K  │  W  │  R  │           │  R  │  B  │  G  │  S  │  Z  │
    *                ├─────┼─────┼─────┼─────┼─────┼─────┬─────┼─────┼─────┼─────┼─────┼─────┤
    *                │Exit │     │     │  A  │  O  │     │     │  E  │  U  │     │     │     │
@@ -191,8 +180,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
   [STENO_LAYER] = {
     {PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM, PV_NUM, PV_NUM,  PV_NUM,  PV_NUM, PV_NUM, PV_NUM,  PV_NUM,  PV_NUM},
-    {PV_LOOK, PV_LS,   PV_LT,   PV_LP,  PV_LH,  PV_STAR, PV_STAR, PV_RF,  PV_RP,  PV_RL,   PV_RT,   PV_RD},
-    {PV_LOOK, PV_LS,   PV_LK,   PV_LW,  PV_LR,  PV_STAR, PV_STAR, PV_RR,  PV_RB,  PV_RG,   PV_RS,   PV_RZ},
+    {___x___, PV_LS,   PV_LT,   PV_LP,  PV_LH,  PV_STAR, PV_STAR, PV_RF,  PV_RP,  PV_RL,   PV_RT,   PV_RD},
+    {___x___, PV_LS,   PV_LK,   PV_LW,  PV_LR,  PV_STAR, PV_STAR, PV_RR,  PV_RB,  PV_RG,   PV_RS,   PV_RZ},
     {PV_EXIT, ___x___, ___x___, PV_A,   PV_O,   KC_SPC,  KC_BSPC, PV_E,   PV_U,   ___x___, ___x___, ___x___}
   },
 
@@ -223,52 +212,6 @@ float plover_song[][2]     = SONG(PLOVER_SOUND);
 float plover_gb_song[][2]  = SONG(PLOVER_GOODBYE_SOUND);
 #endif
 
-// Send PHROPB ({PLOVER:RESUME}).
-void plover_resume(void) {
-  register_code(PV_LP);
-  register_code(PV_LH);
-  register_code(PV_LR);
-  register_code(PV_O);
-  register_code(PV_RP);
-  register_code(PV_RB);
-  unregister_code(PV_LP);
-  unregister_code(PV_LH);
-  unregister_code(PV_LR);
-  unregister_code(PV_O);
-  unregister_code(PV_RP);
-  unregister_code(PV_RB);
-}
-
-// Send PHROF ({PLOVER:SUSPEND}).
-void plover_suspend(void) {
-  register_code(PV_LP);
-  register_code(PV_LH);
-  register_code(PV_LR);
-  register_code(PV_O);
-  register_code(PV_RF);
-  unregister_code(PV_LP);
-  unregister_code(PV_LH);
-  unregister_code(PV_LR);
-  unregister_code(PV_O);
-  unregister_code(PV_RF);
-}
-
-// Send PHROBG ({PLOVER:LOOKUP}).
-void plover_lookup(void) {
-  register_code(PV_LP);
-  register_code(PV_LH);
-  register_code(PV_LR);
-  register_code(PV_O);
-  register_code(PV_RB);
-  register_code(PV_RG);
-  unregister_code(PV_LP);
-  unregister_code(PV_LH);
-  unregister_code(PV_LR);
-  unregister_code(PV_O);
-  unregister_code(PV_RB);
-  unregister_code(PV_RG);
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case QWERTY:
@@ -297,6 +240,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer(LOWER_LAYER, RAISE_LAYER, KEYBOARD_LAYER);
       }
       return false;
+      case MOUSE_EXIT:
+        //exit mouse mode on mouse up
+        if (!record->event.pressed) {
+          layer_off(NAV_LAYER);
+          layer_off(MOUSE_LAYER);
+        }
+        break;
     case STENO:
       if (record->event.pressed) {
 #ifdef AUDIO_ENABLE
@@ -313,7 +263,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         keymap_config.raw = eeconfig_read_keymap();
         keymap_config.nkro = 1;
         eeconfig_update_keymap(keymap_config.raw);
-        plover_resume();
       }
       return false;
     case PV_EXIT:
@@ -321,13 +270,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef AUDIO_ENABLE
         PLAY_SONG(plover_gb_song);
 #endif
-        plover_suspend();
         layer_off(STENO_LAYER);
-      }
-      return false;
-    case PV_LOOK:
-      if (record->event.pressed) {
-        plover_lookup();
       }
       return false;
     case SEND_VERSION:
