@@ -181,13 +181,17 @@ set wildmode=list:longest,full " List all options and complete
 set wildignore=*.class,*.o,*~,*.pyc,.git,node_modules  " Ignore certain files in tab-completion
 " }}}
 " Plugin Manager {{{
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'mrmargolis/dogmatic.vim'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'junegunn/fzf.vim'
-Plugin 'valloric/youcompleteme'
+" Plugin 'valloric/youcompleteme'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'alampros/vim-styled-jsx'
 Plugin 'altercation/vim-colors-solarized'
@@ -216,6 +220,8 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'w0rp/ale'
 Plugin 'wellle/targets.vim'
 Plugin 'justinmk/vim-syntax-extra'
+Plugin 'rhysd/vim-clang-format'
+Plugin 'kana/vim-operator-user'
 
 " " All of your Plugins must be added before the following line
 call vundle#end()
@@ -461,6 +467,17 @@ endif
 
 " Some plugin seems to search for something at startup, so this fixes that.
 silent! nohlsearch
+" }}}
+" vim-clang-format {{{2
+" map to <Leader>cf in C++ code
+let g:clang_format#detect_style_file = 1
+" let g:clang_format#extra_args = "-style=file"
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+" if you install vim-operator-user
+autocmd FileType c,cpp,objc map <buffer><Leader>x <Plug>(operator-clang-format)
+" Toggle auto formatting:
+nmap <Leader>C :ClangFormatAutoToggle<CR>
 " }}}
 
 " vim:set tw=100:
