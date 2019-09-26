@@ -6,33 +6,67 @@
 "
 " Matt's .vimrc file
 "
+" FUNCTIONS {{{
+
+function! SwitchToTest()
+  let dest = ""
+  if expand("%") =~ "_test\\.cpp"
+    let dest = substitute(expand("%"), "_test\\.cpp$", ".cpp", "")
+  elseif expand("%") =~ "\\.cpp$"
+    let dest = substitute(expand("%"), "\\.cpp$", "_test.cpp", "")
+  elseif expand("%") =~ "\\.h$"
+    let dest = substitute(expand("%"), "\\.h$", "_test.cpp", "")
+  endif
+  if dest != ""
+    execute "edit " . dest
+  endif
+endfunction()
+
+function! SwitchToHeader()
+  let dest = ""
+  if expand("%") =~ "_test\\.cpp$"
+    let dest = substitute(expand("%"), "_test\\.cpp$", ".cpp", "")
+  elseif expand("%") =~ "\\.cpp$"
+    let dest = substitute(expand("%"), "\\.cpp$", ".h", "")
+  elseif expand("%") =~ "\\.c$"
+    let dest = substitute(expand("%"), "\\.c$", ".h", "")
+    execute "edit " . dest
+  elseif expand("%") =~ "\\.cc$"
+    let dest = substitute(expand("%"), "\\.cc$", ".h", "")
+    execute "edit " . dest
+  elseif expand("%") =~ "\.h"
+    let dest = substitute(expand("%"), "\\.h$", ".c", "")
+    if !filereadable(dest)
+      let dest = substitute(expand("%"), "\\.h$", ".cc", "")
+    endif
+    if !filereadable(dest)
+      let dest = substitute(expand("%"), "\\.h$", ".cpp", "")
+    endif
+    execute "edit " . dest
+  endif
+  if dest != ""
+    execute "edit " . dest
+  endif
+endfunction()
+
+" }}} 
 " KEY MAPS {{{
 " For any plugins that use this, make their keymappings use comma
 let mapleader = ","
-let maplocalleader = "\\"
+let maplocalleader = "'"
 
 " Useful macros I use the most
-nnoremap <localleader>A :set formatoptions+=a<CR>:echo "autowrap enabled"<CR>
-nnoremap <localleader>M :set noexpandtab tabstop=8 softtabstop=4 shiftwidth=4<CR>
-nnoremap <localleader>T :set expandtab tabstop=8 shiftwidth=8 softtabstop=4<CR>
-nnoremap <localleader>a :set formatoptions-=a<CR>:echo "autowrap disabled"<CR>
-nnoremap <localleader>b :set nocin tw=80<CR>:set formatoptions+=a<CR>
-nnoremap <localleader>c :call TmuxPaneClear()<CR>
-nnoremap <localleader>e :NERDTreeToggle<CR>
 nnoremap <localleader>g :Gstatus<CR>
-nnoremap <localleader>i vip:sort<CR>
-nnoremap <localleader>l :setlocal number!<CR>:setlocal number?<CR>
-nnoremap <localleader>m :set expandtab tabstop=2 shiftwidth=2 softtabstop=2<CR>
-nnoremap <localleader>o :set paste!<CR>:set paste?<CR>
-nnoremap <localleader>p :ProseMode<CR>
-nnoremap <localleader>q :nohlsearch<CR>
-nnoremap <localleader>r :call TmuxPaneRepeat()<CR>
-nnoremap <localleader>s :setlocal invspell<CR>
-nnoremap <localleader>t :set expandtab tabstop=4 shiftwidth=4 softtabstop=4<CR>
-nnoremap <localleader>u :setlocal list!<CR>:setlocal list?<CR>
-nnoremap <localleader>w :setlocal wrap!<CR>:setlocal wrap?<CR>
-nnoremap <localleader>x :cclose<CR>
 nnoremap <localleader>z :w<CR>:!open %<CR><CR>
+
+" re-map to jump to tag definition
+nnoremap <localleader>g <c-]><cr>
+
+" switch to header
+nnoremap <localleader>h :call SwitchToHeader()<cr>
+
+" switch to test file
+nnoremap <localleader>H :call SwitchToTest()<cr>
 
 " Fast editing and reloading of vimrc configs
 nnoremap <leader>e :e! $MYVIMRC<cr>
@@ -481,3 +515,6 @@ nmap <Leader>C :ClangFormatAutoToggle<CR>
 " }}}
 
 " vim:set tw=100:
+" CREDITS {{{
+" https://github.com/matthauck/dotvim 
+" }}}
